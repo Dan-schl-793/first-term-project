@@ -1,5 +1,6 @@
-#opening title message
-title card = """
+# opening title message
+# opening title message
+title_card = r"""
 Welcome To:
  /$$   /$$                                   /$$                     /$$$$$$$$$$$  /$$                        /$$                                /$$           /$$   /$$  /$$                              /$$                        
 | $$  /$$/                                  | $$                    |_____ $$___| | $$                       | $$                               | $$          | $$  /$$/ |__/                             | $$                        
@@ -12,6 +13,6 @@ Welcome To:
                       /$$  | $$                                                                                                                                                           /$$  \ $$                                  
                      |  $$$$$$/                                                                                                                                                          |  $$$$$$/                                  
                       \______/                                                                                                                                                            \______/                                   
-                                                                                                                                                                                           
-                                                                                                                                                                                           
-                                                                                                                                                                                           """                                                                                                                                                                                                                                                                                                                                                                                   """
+"""
+
+print(title_card)
