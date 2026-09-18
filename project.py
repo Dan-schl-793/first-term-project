@@ -13,9 +13,9 @@ Welcome To:
 
 print(title_card)
 
-enter = input("Press the Enter key to continue: ")
+enter = input("press 1 to continue. press 2 to exit: ")
 
-if enter == true:
+if enter == "1":
   # opening message
   print(
       "Hello player. In this game you will be playing a royal knight of the"
