@@ -13,7 +13,7 @@ Welcome To:
 
 print(title_card)
 
-enter = input("press 1 to continue. press 2 to exit: ")
+enter = input("input 1 to continue. input 2 to exit: ")
 
 if enter == "1":
   # opening message
