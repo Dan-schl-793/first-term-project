@@ -1,19 +1,8 @@
-# opening title
-title_card = r"""
-Welcome To:
-  _  __           _             _______ _            _               _     _  __                  _                 
- | |/ /          | |        _  |__   __| |          | |             | |   | |/ (_)               | |                
- | ' / _ __ _   _| | ___   (_)    | |  | |__   ___  | |     ___  ___| |_  | ' / _ _ __   __ _  __| | ___  _ __ ___  
- |  < | '__| | | | |/ _ \         | |  | '_ \ / _ \ | |    / _ \/ __| __| |  < | | '_ \ / _` |/ _` |/ _ \| '_ ` _ \ 
- | . \| |  | |_| | | (_) |        | |  | | | |  __/ | |___| (_) \__ \ |_  | . \| | | | | (_| | (_| | (_) | | | | | |
- |_\|\_\|   \__, |_|\___/  (_)    |_|  |_| |_|\___| |______\___/|___/\__| |_|\_\_|_| |_|\__, |\__,_|\___/|_| |_| |_|
-             __/ |                                                                       __/ |                      
-            |___/                                                                       |___/                                                                                                                                                                                            
-"""
+with open('title_card.txt', 'r') as file:
+    for line in file:
+        print(line.strip())
 
-print(title_card)
-
-enter = input("input 1 to continue. input 2 to exit: ")
+enter = input("press 1 to continue. press 2 to exit: ")
 
 if enter == "1":
   # opening message
