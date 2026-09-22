@@ -21,3 +21,23 @@ if enter == "1":
       )
 else:
   quit()
+
+#character creation
+print("Before you begin your journey, you must first create your character.")
+
+character_name = input("\nWhat is your name, brave knight? ")
+print(f"What an amazing choice, {character_name}!")
+
+while True:
+    try:
+        character_lives = int(input("Now it's time to choose the amount of lives you want. The default is 3,\nso going higher than 3 would make the game more forgiving and going below will make it more of a challenge: "))
+        break
+    except ValueError:
+        print("Invalid input. Please enter a valid number.")
+
+if character_lives > 3:
+    print("You have chosen to have more than the default amount of lives; it would be a bit embarrassing if you fail! Good luck!")
+elif character_lives < 3:
+    print("You have chosen to have less than the default amount of lives; this is going to be a challenge. Good luck!")
+else:
+    print("You chose the default amount of lives. A fair start.")
