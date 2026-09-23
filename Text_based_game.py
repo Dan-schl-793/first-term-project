@@ -41,7 +41,7 @@ with open("title_card.txt", "r") as file:
     for line in content:
         print(line)
 
-enter = input("press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ")
+enter = safe_input("press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ")
 
 if enter.lower() == "s":
     # opening message
@@ -114,3 +114,55 @@ elif weapon_set == "3":
 else:
     print("\nInvalid choice. Exiting game.")
     sys.exit(0)
+
+#location lists
+First_location = ["ronderdale", "the lowlands", "the wastelands", "the dark forest", "kyrlo castle"]
+Second_location = ["the midlands", "clonsel", "hebra village", "the forgotten tavern", "kyrlo castle"]
+Third_location = ["the cursed swamp", "the highlands", "the haunted castle", "the dragon's lair", "kyrlo castle"]
+Fourth_location = ["the frosty peaks","the ancient ruins", "the lost city", "kyrlo castle"]
+Fifth_location = ["valcano pass", "the great temple", "kyrlo castle"]
+Final_battle = ["krylo castle"]
+
+
+#starting gameplay
+print("\n\nNow that you have your character, it's time to begin your journey. Good luck, brave knight!")
+
+#first location selection
+print("\nyou will first need to decide the first location you will travel to.")
+print(("these are your options for the first location:"))
+print(First_location)
+first_location_choice = safe_input("by entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
+
+if first_location_choice == "ronderdale":
+    print("\n\nRonderdale is a small town on the west edge of the krylo kingdom.\nThere are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, skills and stats without taking the risk of losing lives early on")
+    safe_input("\ntype travel to go to this location or type back to go back to the list of locations: ")
+elif first_location_choice == "the lowlands":
+    print()
+    with open("the_lowlands_location.txt", "r") as file:
+        content = file.read().splitlines()
+        for line in content:
+            print(line)
+            safe_input("type travel to go to this location or type back to go back to the list of locations: ")
+elif first_location_choice == "the wastelands":
+    print()
+    with open("the_wastelands_location.txt", "r") as file:
+        content = file.read().splitlines()
+        for line in content:
+            print(line)
+            safe_input("type travel to go to this location or type back to go back to the list of locations: ")
+elif first_location_choice == "the dark forest":
+    print()
+    with open("the_dark_forest_location.txt", "r") as file:
+        content = file.read().splitlines()
+        for line in content:
+            print(line)
+            safe_input("type travel to go to this location or type back to go back to the list of locations: ")
+elif first_location_choice == "kyrlo castle":
+    print()
+    with open("kyrlo_castle_location.txt", "r") as file:
+        content = file.read().splitlines()
+        for line in content:
+            print(line)
+            safe_input("type travel to go to this location or type back to go back to the list of locations: ")
+else:
+    safe_input("Invalid choice. please enter a valid location from the list.")
