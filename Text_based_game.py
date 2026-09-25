@@ -45,7 +45,7 @@ with open("title_card.txt", "r") as file:
 enter = safe_input("press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ")
 
 if enter.lower() == "s":
-    print("\nplease ensure to have your terminal window enlarged for the best playing experience.")
+    print("\nplease ensure to have your terminal window is enlarged for the best playing experience.")
     time.sleep(3)
     # opening message
     print(
@@ -208,28 +208,6 @@ class Player(Character):
             print("You do not have that item.")
             return False
 
-        if choice == "healing herb":
-            heal_amount = 15
-            self.hp = min(self.max_hp, self.hp + heal_amount)
-            self.inventory[choice] -= 1
-            print(f"{self.name} uses a healing herb and restores {heal_amount} HP.")
-            return True
-
-        if choice == "fire bomb":
-            if enemy is None:
-                print("The fire bomb is ready for a tougher fight.")
-                return True
-            self.inventory[choice] -= 1
-            enemy.take_damage(18)
-            print(f"{self.name} throws a fire bomb and deals 18 damage!")
-            return True
-
-        if choice == "iron charm":
-            self.inventory[choice] -= 1
-            self.defense += 2
-            print(f"{self.name} uses the iron charm and gains +2 defense for this fight.")
-            return True
-
         print("That item is not useful right now.")
         return False
 
@@ -288,6 +266,7 @@ def battle_loop(player: Player, enemy: Enemy):
                     inventory_choice = safe_input("Type [cancel] to return to battle: ").strip().lower()
                     if inventory_choice == "cancel":
                         print("You close your inventory and keep fighting.")
+                        inventory_used = False
                         break
                     print("That is not a valid option.")
                     continue
@@ -300,6 +279,7 @@ def battle_loop(player: Player, enemy: Enemy):
 
                 if inventory_choice == "cancel":
                     print("You close your inventory and keep fighting.")
+                    inventory_used = False
                     break
 
                 if inventory_choice not in player.inventory or player.inventory[inventory_choice] <= 0:
@@ -319,7 +299,17 @@ def battle_loop(player: Player, enemy: Enemy):
             player.experience += 10
             print(f"\n{enemy.name} has been defeated! {player.name} wins!")
             print(f"{player.name} gains 10 experience points! Total XP: {player.experience}")
-            break
+            return "win"
+
+        if not player.is_alive():
+            if player.lives > 0:
+                player.lose_life()
+                print(f"{player.name} is back at full HP and the battle is over.")
+                print(f"{enemy.name} wins this round.")
+                return "loss"
+            else:
+                print(f"\n{player.name} has fallen in battle. Game Over.")
+                return "loss"
 
         time.sleep(1)
 
@@ -330,13 +320,21 @@ def battle_loop(player: Player, enemy: Enemy):
         if not player.is_alive():
             if player.lives > 0:
                 player.lose_life()
-                print(f"{player.name} is back at full HP and continues the fight.")
+                print(f"{player.name} is back at full HP and the battle ends here.")
+                print(f"{enemy.name} wins this round.")
+                return "loss"
             else:
                 print(f"\n{player.name} has fallen in battle. Game Over.")
-                break
+                return "loss"
 
         turn_counter += 1
         time.sleep(1)
+
+    if enemy.hp <= 0 and player.hp > 0:
+        return "win"
+    if player.hp <= 0:
+        return "loss"
+    return "loss"
 
 
 #starting gameplay
@@ -374,6 +372,8 @@ if travel_or_back1 == "back":
     print()
     print(First_location)
     first_location_choice = safe_input("by entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
+else:
+    safe_input("Invalid choice. please enter a valid location from the list.")
 
 if travel_or_back1 == "travel":
     print(f"Traveling to {first_location_choice}...")
@@ -403,6 +403,9 @@ if travel_or_back1 == "travel":
                         print(line)
         print(f"\n\n{battle_message1}")
 
+    else:
+        safe_input("Invalid choice. please enter a valid location from the list.")
+
         knight = Player(
             name=character_name,
             max_hp=50,
@@ -422,10 +425,15 @@ if travel_or_back1 == "travel":
             knight.defense -= 1
 
         villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
-        battle_loop(knight, villain)
+        battle_result = battle_loop(knight, villain)
 
-        print("\nThe Chulu has been defeated. The close area is now safe.")
-        if villain.hp <= 0:
+        if battle_result == "win":
+            print("\nThe Chulu has been defeated. The close area is now safe.")
             print(f"\nYou earned 10 experience points for defeating the Chulu! Total XP: {knight.experience}")
-        print("\nNow that you have defeated the Chulu, you can continue your journey.")
+            print("\nNow that you have defeated the Chulu, you can continue your journey.")
+        else:
+            print("\nThe Chulu defeats you and the battle ends.")
+            print(f"{knight.name} loses a life and returns to full health.")
+            print("\nYou can try again from the start of this encounter.")
+
         player_next_action1 = safe_input("\nYou have a few options of what you can do from here\nYou can [explore] the area, [search] for items, [talk] to other characters and get quests, [travel] to another location, [status] to check your condition and use experience points:\n")
