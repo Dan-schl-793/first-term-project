@@ -36,7 +36,7 @@ def safe_input(prompt):
                 text += key
                 print(key, end="", flush=True)
 
-#start of game
+#opening title card and message
 with open("title_card.txt", "r") as file:
     content = file.read().splitlines()
     for line in content:
@@ -47,7 +47,7 @@ enter = safe_input("press [S]tart. press [E]xit, you can also press [ESC] to exi
 if enter.lower() == "s":
     print("\nplease ensure to have your terminal window is enlarged for the best playing experience.")
     time.sleep(3)
-    # opening message
+# opening message
     print(
         " \nHello player. In this game you will be playing a royal knight of the"
         " kingdom Krylo, the kingdom has been overrun with\nevil ancient beasts"
@@ -93,7 +93,7 @@ else:
 
 #weapon set selection
 print("\n\n - next we must determine your starting weapon.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield. Each weapon set has its own strengths and weaknesses, so choose wisely.")
-    #weapon set input
+#weapon set input
 weapon_set = safe_input("\nWhat weapon set do you choose? (press [1] for sword and shield, [2] for spear and shield, [3] for bow and sword): ")
 
 if weapon_set == "1":
@@ -126,7 +126,7 @@ Third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "ky
 Fourth_location = ["the frosty peaks", "valcano pass", "the great temple", "kyrlo castle"]
 Final_battle = ["krylo castle"]
 
-#battle system
+#checking if the player or enemy is still alive based on their health points
 class Character:
     """Base class for any entity participating in combat."""
     def __init__(self, name: str, max_hp: int, attack_power: int, defense: int):
@@ -139,14 +139,14 @@ class Character:
 
     def is_alive(self) -> bool:
         return self.hp > 0
-
+#calculating damage taken by the player and enemy based on their attack power and defense stats
     def take_damage(self, raw_damage: int):
         """Calculates mitigated damage and reduces health points."""
         mitigation = self.defense if not self.is_defending else self.defense * 2
         final_damage = max(1, raw_damage - mitigation)
         self.hp = max(0, self.hp - final_damage)
         print(f"{self.name} takes {final_damage} damage! (HP: {self.hp}/{self.max_hp})")
-
+#deciding how much damage the player and enemy do to each other based on their attack power and defense stats
     def attack(self, target: 'Character'):
         """Deals randomized damage to a target based on base attack power."""
         print(f"{self.name} attacks {target.name}!")
@@ -158,12 +158,12 @@ class Character:
             print("CRITICAL HIT!")
 
         target.take_damage(raw_damage)
-
+#resetting defensive states at the start of a turn to ensure that defense only applies for one turn
     def reset_status(self):
         """Resets temporary defensive states at the start of a turn."""
         self.is_defending = False
 
-
+#additional player attributes and methods for inventory management, experience, and life tracking
 class Player(Character):
     """Player subclass with life tracking, experience, and inventory items."""
     def __init__(self, name: str, max_hp: int, attack_power: int, defense: int):
@@ -171,7 +171,7 @@ class Player(Character):
         self.lives = 1
         self.experience = 0
         self.inventory = {}
-
+#adding items to the inventory logic
     def add_item(self, item_name, quantity=1):
         """Add a found item to the player's inventory."""
         if item_name in self.inventory:
@@ -179,7 +179,7 @@ class Player(Character):
         else:
             self.inventory[item_name] = quantity
         print(f"{self.name} picked up {quantity} {item_name}.")
-
+#fixed so that the player can view their inventory without spending a turn
     def view_inventory(self):
         """Shows the player's inventory without spending a turn."""
         if not self.inventory:
@@ -190,7 +190,7 @@ class Player(Character):
         for item, count in self.inventory.items():
             if count > 0:
                 print(f"- {item} x{count}")
-
+#inventory use logic
     def use_inventory(self, enemy=None):
         """Lets the player use an item they have collected on the journey."""
         if not self.inventory or not any(count > 0 for count in self.inventory.values()):
@@ -210,7 +210,7 @@ class Player(Character):
 
         print("That item is not useful right now.")
         return False
-
+#what happens if player health reaches 0 (lose a life and restore full health + end battle on a loss)
     def lose_life(self):
         """When HP reaches 0, lose one life and restore the full HP bar."""
         if self.lives > 0:
@@ -221,7 +221,7 @@ class Player(Character):
                 self.hp = 0
                 print(f"{self.name} has no lives left. Game over.")
 
-
+#deciding enemy stats and behaviour
 class Enemy(Character):
     """Enemy subclass with basic automated AI."""
     def take_turn(self, target: Character):
@@ -232,17 +232,17 @@ class Enemy(Character):
         else:
             self.attack(target)
 
-
+#battle loop function that manages the turn-based system
 def battle_loop(player: Player, enemy: Enemy):
     """Manages the loop of the turn-based system."""
     print(f"\nA wild {enemy.name} appeared! Battle begins!\n")
     turn_counter = 1
-
+#deciding if another turn should be taken based on the health of the player and enemy
     while player.is_alive() and enemy.is_alive():
         print(f"\n=== TURN {turn_counter} ===")
         print(f"{player.name}: {player.hp}/{player.max_hp} HP | {enemy.name}: {enemy.hp}/{enemy.max_hp} HP")
         print("-" * 30)
-
+#player chooses action
         player.reset_status()
         print("Choose your action:")
         print("1. Attack")
@@ -251,9 +251,9 @@ def battle_loop(player: Player, enemy: Enemy):
 
         choice = safe_input("Enter choice (1-3): ").strip()
         print()
-
+#check if player used an item in the inventory, if not, continue with the battle loop
         inventory_used = False
-
+#what happens depending on action choice, does the player chooses to attack, defend or use an item from the inventory
         if choice == "1":
             player.attack(enemy)
         elif choice == "2":
@@ -349,21 +349,21 @@ print(("\nthese are your options for the first location:"))
 print(First_location)
 first_location_choice = safe_input("\nby entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
 
-
+#messages for each pickable location and the option to travel or go back to the list of locations
 if first_location_choice == "the lowlands":
-    print()
+    print("\n\n")
     travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
 elif first_location_choice == "ronderdale":
     print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
     travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
 elif first_location_choice == "the wastelands":
-    print()
+    print("\n\n")
     travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
 elif first_location_choice == "the dark forest":
-    print()   
+    print("\n\n")   
     travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
 elif first_location_choice == "kyrlo castle":
-    print()
+    print("\n\n")
     travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
 else:
     safe_input("Invalid choice. please enter a valid location from the list.")
@@ -374,7 +374,7 @@ if travel_or_back1 == "back":
     first_location_choice = safe_input("by entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
 else:
     safe_input("Invalid choice. please enter a valid location from the list.")
-
+#traveling to the first location
 if travel_or_back1 == "travel":
     print(f"Traveling to {first_location_choice}...")
     time.sleep(1)
@@ -384,7 +384,7 @@ if travel_or_back1 == "travel":
     time.sleep(1)
     print(f"Traveling to {first_location_choice}...")
     time.sleep(1)
-
+#deciding whether to battle or flee from enemies in the new location
     print("\nwhen entering a new location you cannot do any other actions until you have slain the nearby enemies.")
 
     welcome_message = safe_input(f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] nearby enemies?: ")
@@ -395,7 +395,7 @@ if travel_or_back1 == "travel":
         print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
         print(First_location)
         first_location_choice = safe_input("\nby entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
-        
+#if input == battle, start the battle loop with the chulu enemy    
     elif welcome_message == "battle":
         with open("chulu.txt", "r") as file:
                     content = file.read().splitlines()
@@ -405,7 +405,7 @@ if travel_or_back1 == "travel":
 
     else:
         safe_input("Invalid choice. please enter a valid location from the list.")
-
+#defining player stats based on character creation choices
         knight = Player(
             name=character_name,
             max_hp=50,
@@ -413,7 +413,7 @@ if travel_or_back1 == "travel":
             defense=3,
         )
         knight.lives = character_lives
-
+#deciding player dmg and defence based on weapon set choice
         if weapon_set == "1":
             knight.attack_power += 4
             knight.defense += 3
@@ -423,7 +423,7 @@ if travel_or_back1 == "travel":
         elif weapon_set == "3":
             knight.attack_power += 5
             knight.defense -= 1
-
+#defining enemy stats and starting the battle loop
         villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
         battle_result = battle_loop(knight, villain)
 
