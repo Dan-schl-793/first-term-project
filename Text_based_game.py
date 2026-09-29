@@ -42,7 +42,22 @@ with open("title_card.txt", "r") as file:
     for line in content:
         print(line)
 
-enter = safe_input("press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ")
+
+def prompt_choice(prompt, valid_choices, invalid_message="Invalid choice. Please try again."):
+    """Loop until the user enters one of the valid choices."""
+    valid_choices = {choice.lower() for choice in valid_choices}
+    while True:
+        choice = safe_input(prompt).strip()
+        if choice.lower() in valid_choices:
+            return choice
+        print(invalid_message)
+
+
+enter = prompt_choice(
+    "press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ",
+    ["S", "E"],
+    "Invalid choice. Please press [S] to start or [E] to exit."
+)
 
 if enter.lower() == "s":
     print("\nplease ensure to have your terminal window is enlarged for the best playing experience.")
@@ -64,15 +79,21 @@ if enter.lower() == "s":
 elif enter.lower() == "e":
     print("You chose to exit.")
     sys.exit(0)
-else:
-    print("Invalid choice. Exiting.")
-    sys.exit(0)
 
 #character creation
 player_exp = 0
 print("\n   -   Before you begin your journey, you must first create your character.")
-    #character name input
-character_name = safe_input("\nWhat is your name, brave knight?: ")
+
+#character name input
+while True:
+    character_name = safe_input("\nWhat is your name, brave knight?: ").strip()
+    if not character_name:
+        print("Your knight name cannot be empty. Please enter a valid name.")
+    elif len(character_name) > 20:
+        print("Your knight name must be 20 characters or fewer. Please try again.")
+    else:
+        break
+
 print(f"\nWhat an amazing choice, {character_name} is such a heroic name!")
 
 #character health input
@@ -94,7 +115,11 @@ else:
 #weapon set selection
 print("\n\n - next we must determine your starting weapon.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield. Each weapon set has its own strengths and weaknesses, so choose wisely.")
 #weapon set input
-weapon_set = safe_input("\nWhat weapon set do you choose? (press [1] for sword and shield, [2] for spear and shield, [3] for bow and sword): ")
+weapon_set = prompt_choice(
+    "\nWhat weapon set do you choose? (press [1] for sword and shield, [2] for spear and shield, [3] for bow and sword): ",
+    ["1", "2", "3"],
+    "\nInvalid choice. Please select 1, 2, or 3."
+)
 
 if weapon_set == "1":
   with open("sword_shield_char.txt", "r") as file:
@@ -115,9 +140,6 @@ elif weapon_set == "3":
             for line in content:
                 print(line)
     print("\nYou have chosen the bow and sword. A versatile choice, good for ranged and melee combat but bad for defense.")
-else:
-    print("\nInvalid choice. Exiting game.")
-    sys.exit(0)
 
 #location lists
 First_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
@@ -235,7 +257,7 @@ class Enemy(Character):
 #battle loop function that manages the turn-based system
 def battle_loop(player: Player, enemy: Enemy):
     """Manages the loop of the turn-based system."""
-    print(f"\nA wild {enemy.name} appeared! Battle begins!\n")
+    print(f"\nA wild {enemy.name} appeared! It engages you in battle!\n")
     turn_counter = 1
 #deciding if another turn should be taken based on the health of the player and enemy
     while player.is_alive() and enemy.is_alive():
@@ -347,93 +369,101 @@ print("\nYou will go through 5 different location tiers in this game. Theres loc
 print("\nyou will first need to decide the first location you will travel to.")
 print(("\nthese are your options for the first location:"))
 print(First_location)
-first_location_choice = safe_input("\nby entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
+valid_locations = [location.lower() for location in First_location] + ["the wastelands"]
 
-#messages for each pickable location and the option to travel or go back to the list of locations
-if first_location_choice == "the lowlands":
-    print("\n\n")
-    travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
-elif first_location_choice == "ronderdale":
-    print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
-    travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
-elif first_location_choice == "the wastelands":
-    print("\n\n")
-    travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
-elif first_location_choice == "the dark forest":
-    print("\n\n")   
-    travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
-elif first_location_choice == "kyrlo castle":
-    print("\n\n")
-    travel_or_back1 = safe_input("\ntype [travel] to go to this location or type [back] to go back to the list of locations: ")
-else:
-    safe_input("Invalid choice. please enter a valid location from the list.")
-    
-if travel_or_back1 == "back":
+while True:
+    first_location_choice = prompt_choice(
+        "\nby entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ",
+        valid_locations,
+        "Invalid location. Please choose one from the list."
+    )
+
+    if first_location_choice.lower() == "the lowlands":
+        print("\n\n")
+    elif first_location_choice.lower() == "ronderdale":
+        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
+    elif first_location_choice.lower() == "the wastelands":
+        print("\n\n")
+    elif first_location_choice.lower() == "the dark forest":
+        print("\n\n")
+    elif first_location_choice.lower() == "kyrlo castle":
+        print("\n\n")
+
+    travel_or_back1 = prompt_choice(
+        "\ntype [travel] to go to this location or type [back] to go back to the list of locations: ",
+        ["travel", "back"],
+        "Invalid choice. Please type [travel] or [back]."
+    )
+
+    if travel_or_back1.lower() == "travel":
+        break
+
     print()
     print(First_location)
-    first_location_choice = safe_input("by entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
-else:
-    safe_input("Invalid choice. please enter a valid location from the list.")
-#traveling to the first location
-if travel_or_back1 == "travel":
-    print(f"Traveling to {first_location_choice}...")
-    time.sleep(1)
-    print(f"Traveling to {first_location_choice}...")
-    time.sleep(1)
-    print(f"Traveling to {first_location_choice}...")
-    time.sleep(1)
-    print(f"Traveling to {first_location_choice}...")
-    time.sleep(1)
-#deciding whether to battle or flee from enemies in the new location
-    print("\nwhen entering a new location you cannot do any other actions until you have slain the nearby enemies.")
 
-    welcome_message = safe_input(f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] nearby enemies?: ")
+#traveling to the first location
+print(f"Traveling to {first_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {first_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {first_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {first_location_choice}...")
+time.sleep(1)
+
+#deciding whether to battle or flee from enemies in the new location
+print("\nwhen entering a new location you cannot do any other actions until you have slain the nearby enemies.")
+
+while True:
+    welcome_message = prompt_choice(
+        f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] nearby enemies?: ",
+        ["flee", "battle"],
+        "Invalid choice. Please type [flee] or [battle]."
+    )
     battle_message1 = ("your first battle is with a chulu, a chimp looking creature with medium health but low damage output")
-    
-    print(welcome_message)
-    if welcome_message == "flee":
+
+    if welcome_message.lower() == "flee":
         print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
         print(First_location)
-        first_location_choice = safe_input("\nby entering the name of a location you will be given details about the location and you will be able to choose whether to go there or not: ")
-#if input == battle, start the battle loop with the chulu enemy    
-    elif welcome_message == "battle":
+        continue
+
+    if welcome_message.lower() == "battle":
         with open("chulu.txt", "r") as file:
-                    content = file.read().splitlines()
-                    for line in content:
-                        print(line)
+            content = file.read().splitlines()
+            for line in content:
+                print(line)
         print(f"\n\n{battle_message1}")
+        break
 
-    else:
-        safe_input("Invalid choice. please enter a valid location from the list.")
 #defining player stats based on character creation choices
-        knight = Player(
-            name=character_name,
-            max_hp=50,
-            attack_power=12,
-            defense=3,
-        )
-        knight.lives = character_lives
+knight = Player(
+    name=character_name,
+    max_hp=50,
+    attack_power=12,
+    defense=3,
+)
+knight.lives = character_lives
 #deciding player dmg and defence based on weapon set choice
-        if weapon_set == "1":
-            knight.attack_power += 4
-            knight.defense += 3
-        elif weapon_set == "2":
-            knight.attack_power += 3
-            knight.defense += 4
-        elif weapon_set == "3":
-            knight.attack_power += 5
-            knight.defense -= 1
+if weapon_set == "1":
+    knight.attack_power += 4
+    knight.defense += 3
+elif weapon_set == "2":
+    knight.attack_power += 3
+    knight.defense += 4
+elif weapon_set == "3":
+    knight.attack_power += 5
+    knight.defense -= 1
 #defining enemy stats and starting the battle loop
-        villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
-        battle_result = battle_loop(knight, villain)
+villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
+battle_result = battle_loop(knight, villain)
 
-        if battle_result == "win":
-            print("\nThe Chulu has been defeated. The close area is now safe.")
-            print(f"\nYou earned 10 experience points for defeating the Chulu! Total XP: {knight.experience}")
-            print("\nNow that you have defeated the Chulu, you can continue your journey.")
-        else:
-            print("\nThe Chulu defeats you and the battle ends.")
-            print(f"{knight.name} loses a life and returns to full health.")
-            print("\nYou can try again from the start of this encounter.")
+if battle_result == "win":
+    print("\nThe Chulu has been defeated. The close area is now safe.")
+    print(f"\nYou earned 10 experience points for defeating the Chulu! Total XP: {knight.experience}")
+    print("\nNow that you have defeated the Chulu, you can continue your journey.")
+else:
+    print("\nThe Chulu defeats you and the battle ends.")
+    print(f"{knight.name} loses a life and returns to full health.")
+    print("\nYou can try again from the start of this encounter.")
 
-        player_next_action1 = safe_input("\nYou have a few options of what you can do from here\nYou can [explore] the area, [search] for items, [talk] to other characters and get quests, [travel] to another location, [status] to check your condition and use experience points:\n")
+player_next_action1 = safe_input("\nYou have a few options of what you can do from here\nYou can [explore] the area, [search] for items, [talk] to other characters and get quests, [travel] to another location, [status] to check your condition and use experience points:\n")
