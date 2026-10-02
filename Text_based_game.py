@@ -1,5 +1,6 @@
 import time
 import random
+from itertools import zip_longest
 
 #logic for esc to exit the game at any time
 import sys
@@ -60,7 +61,7 @@ enter = prompt_choice(
 )
 
 if enter.lower() == "s":
-    print("\nplease ensure to have your terminal window is enlarged for the best playing experience.")
+    print("\nplease ensure to have your terminal window enlarged for the best playing experience.")
     time.sleep(3)
 # opening message
     print(
@@ -94,7 +95,8 @@ while True:
     else:
         break
 
-print(f"\nWhat an amazing choice, {character_name} is such a heroic name!")
+name_reply = ["What an amazing choice, ", "Such a noble name, ", "A name that echoes with courage, "]
+print(random.choices(name_reply, weights=[0.333, 0.333, 0.333])[0], "", character_name,"!")
 
 #character health input
 while True:
@@ -110,36 +112,64 @@ if character_lives > 3:
 elif character_lives < 3:
     print("\nYou have chosen to have less than the default amount of lives; this is going to be a challenge. Good luck!")
 else:
-    print("\nYou chose the default amount of lives. A repectable choice.")
+    print("\nYou chose the default amount of lives. A respectable choice.")
 
 #weapon set selection
-print("\n\n - next we must determine your starting weapon.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield. Each weapon set has its own strengths and weaknesses, so choose wisely.")
-#weapon set input
-weapon_set = prompt_choice(
-    "\nWhat weapon set do you choose? (press [1] for sword and shield, [2] for spear and shield, [3] for bow and sword): ",
-    ["1", "2", "3"],
-    "\nInvalid choice. Please select 1, 2, or 3."
-)
+print("\n\n - next we must determine your starting class.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield.\n"
+      " - Each weapon set has its own strengths and weaknesses which will be displayed by typing inspect into the terminal.\n" \
+      " - You will then get the choice of whether you would like to pick that option or go back to the list and select another.")
+print()
+print()
+class_arts = []
+for art_file in ("warrior_class.txt", "archer_class.txt", "paladin_class.txt"):
+    with open(art_file, "r") as file:
+        class_arts.append(file.read().splitlines())
 
-if weapon_set == "1":
-  with open("sword_shield_char.txt", "r") as file:
-    content = file.read().splitlines()
-    for line in content:
-        print(line)
-    print("\n\nYou have chosen the sword and shield. A classic choice, good for both offense and defense.")
+column_widths = [max(map(len, art)) for art in class_arts]
+for art_row in zip_longest(*class_arts, fillvalue=""):
+    print("  ".join(line.ljust(width) for line, width in zip(art_row, column_widths)))
 
-elif weapon_set == "2":
-    with open("spear_shield_char.txt", "r") as file:
-        content = file.read().splitlines()
-        for line in content:
-            print(line)
-    print("\nYou have chosen the spear and shield. A safe choice, good for defense and thrusting attacks to keep enemies at a safe distance.")
-elif weapon_set == "3":
-    with open("bow_sword_char.txt", "r") as file:
-            content = file.read().splitlines()
-            for line in content:
-                print(line)
-    print("\nYou have chosen the bow and sword. A versatile choice, good for ranged and melee combat but bad for defense.")
+
+#class choice input
+class_details = {
+    "warrior": (
+        "1",
+        "The warrior is balanced, with moderate attack, defense and mobility. It has less range than the paladin and cannot attack from a distance like the archer.",
+    ),
+    "archer": (
+        "2",
+        "The archer attacks from distance, close combat and has high mobility, but cannot parry like the warrior or paladin.",
+    ),
+    "paladin": (
+        "3",
+        "The paladin uses a halberd for mid-close range and a large shield for strong parries, but has the least mobility.",
+    ),
+}
+
+while True:
+    class_set = prompt_choice(
+        "\nselect a class: [warrior], [archer], or [paladin]: ",
+        class_details,
+        "Invalid class choice. Please choose warrior, archer, or paladin.",
+    ).lower()
+    action = prompt_choice(
+        f"Would you like to [choose] or [inspect] the {class_set} class?: ",
+        ["choose", "inspect"],
+        "Please type choose or inspect.",
+    ).lower()
+
+    if action == "inspect":
+        print(f"\n{class_details[class_set][1]}")
+        action = prompt_choice(
+            "Type [choose] to select this class or [back] to return to the class list: ",
+            ["choose", "back"],
+            "Please type choose or back.",
+        ).lower()
+        if action == "back":
+            continue
+
+    weapon_set = class_details[class_set][0]
+    break
 
 #location lists
 First_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
@@ -188,8 +218,9 @@ class Character:
 #additional player attributes and methods for inventory management, experience, and life tracking
 class Player(Character):
     """Player subclass with life tracking, experience, and inventory items."""
-    def __init__(self, name: str, max_hp: int, attack_power: int, defense: int):
+    def __init__(self, name: str, max_hp: int, attack_power: int, defense: int, class_name: str):
         super().__init__(name, max_hp, attack_power, defense)
+        self.class_name = class_name
         self.lives = 1
         self.experience = 0
         self.inventory = {}
@@ -360,7 +391,7 @@ def battle_loop(player: Player, enemy: Enemy):
 
 
 #starting gameplay
-print("\nNow that you have your character, it's time to begin your journey. Good luck, brave knight!")
+print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
 #location selection mechanic explanation
 print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle. Where the leader of the ")
@@ -441,6 +472,7 @@ knight = Player(
     max_hp=50,
     attack_power=12,
     defense=3,
+    class_name=class_set,
 )
 knight.lives = character_lives
 #deciding player dmg and defence based on weapon set choice
