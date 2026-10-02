@@ -4,7 +4,9 @@ from itertools import zip_longest
 
 #logic for esc to exit the game at any time
 import sys
-import msvcrt
+import msvcrt 
+
+# DadSuggests: maybe set a function here that prints a page divider, then you could call it anywhere you want to break up walls of text
 
 def safe_input(prompt):
     """Read input while checking for Escape to quit instantly."""
@@ -53,7 +55,7 @@ def prompt_choice(prompt, valid_choices, invalid_message="Invalid choice. Please
             return choice
         print(invalid_message)
 
-
+# DadSuggests: you could perform lower on enter once and then you wouldnt need to repeat it on lines 66 and 81, you actually do this later on during class select
 enter = prompt_choice(
     "press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ",
     ["S", "E"],
@@ -95,9 +97,11 @@ while True:
     else:
         break
 
+# DadSuggests: maybe have a list of compliments and pick one at random each time the game is played.  To add a bit of variety.
 name_reply = ["What an amazing choice, ", "Such a noble name, ", "A name that echoes with courage, "]
 print(random.choices(name_reply, weights=[0.333, 0.333, 0.333])[0], "", character_name,"!")
 
+# DadSuggests: maybe dont use the term health input... ask them for a choice of very easy[VE], easy[E], normal[N], hard[H], very hard[VH] and set the lives accrodingly.
 #character health input
 while True:
     try:
@@ -106,6 +110,7 @@ while True:
     except ValueError:
         print("Invalid input. Please enter a valid number.")
 
+# DadSuggests:  You shouldnt need to loop over these.  You could have a dictionary with the corresponding 'taunt/praise', then simply pull it out
 #response to character health input
 if character_lives > 3:
     print("\nYou have chosen to have more than the default amount of lives; it would be a bit embarrassing if you fail! Good luck!")
@@ -113,6 +118,7 @@ elif character_lives < 3:
     print("\nYou have chosen to have less than the default amount of lives; this is going to be a challenge. Good luck!")
 else:
     print("\nYou chose the default amount of lives. A respectable choice.")
+
 
 #weapon set selection
 print("\n\n - next we must determine your starting class.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield.\n"
@@ -393,6 +399,7 @@ def battle_loop(player: Player, enemy: Enemy):
 #starting gameplay
 print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
+# DadSuggests: missing text in this explanation
 #location selection mechanic explanation
 print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle. Where the leader of the ")
 
@@ -412,6 +419,7 @@ while True:
     if first_location_choice.lower() == "the lowlands":
         print("\n\n")
     elif first_location_choice.lower() == "ronderdale":
+        # DadSuggests: why are you not multi-lining you code here like you do at the start?
         print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
     elif first_location_choice.lower() == "the wastelands":
         print("\n\n")
@@ -466,6 +474,7 @@ while True:
         print(f"\n\n{battle_message1}")
         break
 
+# DadSuggests: probably best to do this straight after class selection rather than wait til the first battle
 #defining player stats based on character creation choices
 knight = Player(
     name=character_name,
@@ -495,7 +504,12 @@ if battle_result == "win":
     print("\nNow that you have defeated the Chulu, you can continue your journey.")
 else:
     print("\nThe Chulu defeats you and the battle ends.")
+    # DadSuggests: presumably you meant Chulu returns to full health?
     print(f"{knight.name} loses a life and returns to full health.")
     print("\nYou can try again from the start of this encounter.")
 
 player_next_action1 = safe_input("\nYou have a few options of what you can do from here\nYou can [explore] the area, [search] for items, [talk] to other characters and get quests, [travel] to another location, [status] to check your condition and use experience points:\n")
+
+# DadSuggests: the game loop logic cann probably be a bit clever.  E.g. if the player can't do anything until they defeat all the nearby monsters then maybe you could set a var equal
+# to the number of encounters there are, each time they defeat one you could then reduce the count.  If they try to do a different action like 'search' for example then that could be
+# a function and the first thing it does is check remaining_encounters == 0 for example.  
