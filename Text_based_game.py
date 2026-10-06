@@ -54,6 +54,20 @@ def prompt_choice(prompt, valid_choices, invalid_message="Invalid choice. Please
         print(invalid_message)
 
 
+def show_player_stats(player):
+    """Display the key character and party statistics for the player."""
+    print("\n=== Character Status ===")
+    print(f"Name: {player.name}")
+    print(f"Class: {player.class_name}")
+    print(f"Party size: {player.party_members}")
+    print(f"HP: {player.hp}/{player.max_hp}")
+    print(f"Strength: {player.attack_power}")
+    print(f"Defense: {player.defense}")
+    print(f"Agility: {player.agility}")
+    print(f"Lives remaining: {player.lives}")
+    print(f"Experience: {player.experience}")
+
+
 enter = prompt_choice(
     "press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ",
     ["S", "E"],
@@ -101,7 +115,8 @@ print(random.choices(name_reply, weights=[0.333, 0.333, 0.333])[0], "", characte
 #character health input
 while True:
     try:
-        character_lives = int(safe_input("\nNow it's time to choose the amount of lives you want. The default is 3, going higher than 3 would make\nthe game more forgiving and going below will make it more of a challenge. what will you choose?: "))
+        character_lives = int(safe_input("\nNow it's time to choose the amount of lives you want. The default is 3, going higher than 3 would make\n"
+                                         " the game more forgiving and going below will make it more of a challenge. what will you choose?: "))
         break
     except ValueError:
         print("Invalid input. Please enter a valid number.")
@@ -223,6 +238,8 @@ class Player(Character):
         self.class_name = class_name
         self.lives = 1
         self.experience = 0
+        self.party_members = 0
+        self.agility = 5
         self.inventory = {}
 #adding items to the inventory logic
     def add_item(self, item_name, quantity=1):
@@ -350,6 +367,7 @@ def battle_loop(player: Player, enemy: Enemy):
 
         if not enemy.is_alive():
             player.experience += 10
+            player.hp = player.max_hp
             print(f"\n{enemy.name} has been defeated! {player.name} wins!")
             print(f"{player.name} gains 10 experience points! Total XP: {player.experience}")
             return "win"
@@ -357,11 +375,13 @@ def battle_loop(player: Player, enemy: Enemy):
         if not player.is_alive():
             if player.lives > 0:
                 player.lose_life()
+                player.hp = player.max_hp
                 print(f"{player.name} is back at full HP and the battle is over.")
                 print(f"{enemy.name} wins this round.")
                 return "loss"
             else:
                 print(f"\n{player.name} has fallen in battle. Game Over.")
+                player.hp = 0
                 return "loss"
 
         time.sleep(1)
@@ -373,11 +393,13 @@ def battle_loop(player: Player, enemy: Enemy):
         if not player.is_alive():
             if player.lives > 0:
                 player.lose_life()
+                player.hp = player.max_hp
                 print(f"{player.name} is back at full HP and the battle ends here.")
                 print(f"{enemy.name} wins this round.")
                 return "loss"
             else:
                 print(f"\n{player.name} has fallen in battle. Game Over.")
+                player.hp = 0
                 return "loss"
 
         turn_counter += 1
@@ -394,7 +416,10 @@ def battle_loop(player: Player, enemy: Enemy):
 print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
 #location selection mechanic explanation
-print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle. Where the leader of the ")
+print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle.\n"
+" Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
+" and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
+" to go back to a previous tier once you have moved on.")
 
 #first location selection
 print("\nyou will first need to decide the first location you will travel to.")
@@ -412,7 +437,9 @@ while True:
     if first_location_choice.lower() == "the lowlands":
         print("\n\n")
     elif first_location_choice.lower() == "ronderdale":
-        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\nThe people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\ngoing to Ronderdale will give oportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
+        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\n"
+        " The people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\n"
+        " Going to Ronderdale will give you the opportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
     elif first_location_choice.lower() == "the wastelands":
         print("\n\n")
     elif first_location_choice.lower() == "the dark forest":
@@ -479,12 +506,15 @@ knight.lives = character_lives
 if weapon_set == "1":
     knight.attack_power += 4
     knight.defense += 3
+    knight.agility += 2
 elif weapon_set == "2":
     knight.attack_power += 3
     knight.defense += 4
+    knight.agility += 5
 elif weapon_set == "3":
     knight.attack_power += 5
     knight.defense -= 1
+    knight.agility += 1
 #defining enemy stats and starting the battle loop
 villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
 battle_result = battle_loop(knight, villain)
@@ -495,7 +525,54 @@ if battle_result == "win":
     print("\nNow that you have defeated the Chulu, you can continue your journey.")
 else:
     print("\nThe Chulu defeats you and the battle ends.")
-    print(f"{knight.name} loses a life and returns to full health.")
+    print(f"{knight.name}, you have lost a life and returned to full health.")
     print("\nYou can try again from the start of this encounter.")
 
-player_next_action1 = safe_input("\nYou have a few options of what you can do from here\nYou can [explore] the area, [search] for items, [talk] to other characters and get quests, [travel] to another location, [status] to check your condition and use experience points:\n")
+player_next_action1 = safe_input("\nYou have a few options of what you can do from here.\nYou can [explore] the area, type [talk]"
+                                 " to other characters and find out more about them and your enemies, type [travel] to another location, or type [status]\n"
+                                 " to check your condition and use experience points: ").strip().lower()
+
+if player_next_action1 == "status":
+    show_player_stats(knight)
+
+if player_next_action1 == "explore":
+    explore_outcomes1 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
+    result = random.choice(explore_outcomes1)
+    print(result)
+    open1 = prompt_choice(
+        "\nType [open] to open the chest or [leave] to leave it alone: ",
+        ["open", "leave"],
+        "Invalid choice. Please type [open] or [leave]."
+    )
+    if open1.lower() == "open":
+        chest_outcomes1 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
+        result = random.choice(chest_outcomes1)
+        print(result)
+        knight.experience += 5
+        print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
+        stats1 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
+        if stats1.lower() == "yes":
+            show_player_stats(knight)
+        else:
+            print("You chose not to view your stats.")
+    elif open1.lower() == "leave":
+        print("You leave the chest alone and continue exploring.")
+    else:
+        print("Invalid choice. You leave the chest alone and continue exploring.")
+
+if player_next_action1 == "talk":
+    print("\nYou talk to the villagers and they tell you about the recent attacks by the Zoli civilisation and their leader Yohl.")
+    print("They also mention that there are other survivors in the area who might be able to help you on your journey.")
+    
+    character_accept1 = safe_input("\nwould you like to [recruit] a survivor or [leave] them alone?: ")
+    if character_accept1.lower() == "recruit":
+        knight.party_members += 1
+        print("\nYou have recruited a survivor to join your party. They will help you in battles and provide support.")
+        knight.add_item("Survivor Ally", 1)
+        print(f"Your party now has {knight.party_members} member(s).")
+    elif character_accept1.lower() == "leave":
+        print("\nYou decide not to recruit the survivor and continue on your journey.")
+choice2 = safe_input("\nwhat would you like to do next? Do you need a reminder of your options? type [yes] or [no]: ")
+if choice2.lower() == "yes":
+    player_next_action2 = safe_input("\nYou can [explore] the area, type [talk] to other characters and find out more about them and your enemies,\n"
+                                     "type [travel] to another location, or type [status]to check your condition and use experience points: ").strip().lower()
