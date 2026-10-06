@@ -126,8 +126,10 @@ if character_lives > 3:
     print("\nYou have chosen to have more than the default amount of lives; it would be a bit embarrassing if you fail! Good luck!")
 elif character_lives < 3:
     print("\nYou have chosen to have less than the default amount of lives; this is going to be a challenge. Good luck!")
-else:
-    print("\nYou chose the default amount of lives. A respectable choice.")
+elif character_lives == 3:
+    print("\nYou have chosen to have the default amount of lives; this is a balanced choice. Good luck!")
+elif character_lives <= 0:
+    print("\nYou can't have 0 or less lives, so you will be given the default amount of lives. Good luck!")
 
 #weapon set selection
 print("\n\n - next we must determine your starting class.\n - You can choose from a sword and shield, a bow and sword, or a spear and shield.\n"
