@@ -189,11 +189,11 @@ while True:
     break
 
 #location lists
-First_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
-Second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
-Third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
-Fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
-Final_battle = ["krylo castle"]
+first_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
+second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
+third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
+fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
+final_battle = ["krylo castle"]
 
 #checking if the player or enemy is still alive based on their health points
 class Character:
@@ -427,8 +427,8 @@ print("\nYou will go through 5 different location tiers in this game. Theres loc
 #first location selection
 print("\nyou will first need to decide the first location you will travel to.")
 print(("\nthese are your options for the first location:"))
-print(First_location)
-valid_locations = [location.lower() for location in First_location] + ["the wastelands"]
+print(first_location)
+valid_locations = [location.lower() for location in first_location] + ["the wastelands"]
 
 while True:
     first_location_choice = prompt_choice(
@@ -463,7 +463,7 @@ while True:
         break
 
     print()
-    print(First_location)
+    print(first_location)
 
 #traveling to the first location
 print(f"Traveling to {first_location_choice}...")
@@ -489,7 +489,7 @@ while True:
 
     if welcome_message.lower() == "flee":
         print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
-        print(First_location)
+        print(first_location)
         continue
 
     if welcome_message.lower() == "battle":
@@ -590,10 +590,10 @@ if player_next_action1 == "travel":
 
     if second_location_choice.lower() == "same":
         print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-        print(First_location)
+        print(second_location)
     elif second_location_choice.lower() == "next":
         print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-        print(Second_location)
+        print(second_location)
 
 if player_next_action1 == "status":
     show_player_stats(knight)
@@ -657,15 +657,20 @@ third_location_choice = prompt_choice(
         "Invalid choice. Please type [same] or [next]."
     )
 
-if player_next_action2 == "travel":
-    safe_input(third_location_choice)
+if player_next_action1 == "travel":
+    third_location_choice = prompt_choice(
+        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
+        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
+        ["same", "next"],
+        "Invalid choice. Please type [same] or [next]."
+    )
 
-elif third_location_choice.lower() == "same":
-    print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-    print(First_location)
-elif third_location_choice.lower() == "next":
-    print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-    print(Third_location)
+    if third_location_choice.lower() == "same":
+        print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
+        print(third_location)
+    elif third_location_choice.lower() == "next":
+        print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
+        print(third_location)
 
 if player_next_action2 == "status":
     show_player_stats(knight)
