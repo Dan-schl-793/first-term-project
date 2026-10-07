@@ -192,7 +192,7 @@ while True:
 First_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
 Second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
 Third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
-Fourth_location = ["the frosty peaks", "valcano pass", "the great temple", "kyrlo castle"]
+Fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
 Final_battle = ["krylo castle"]
 
 #checking if the player or enemy is still alive based on their health points
@@ -437,17 +437,20 @@ while True:
     )
 
     if first_location_choice.lower() == "the lowlands":
-        print("\n\n")
+        print("\n\nThe lowlands are a large area of flat land with many low level enemies. The area is home to many survivors and there are many quests to complete here.\n")
     elif first_location_choice.lower() == "ronderdale":
         print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\n"
         " The people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\n"
         " Going to Ronderdale will give you the opportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
     elif first_location_choice.lower() == "the wastelands":
-        print("\n\n")
+        print("\n\nThe wastelands were the first area to be attacked by the Zoli civilisation. The area is now a barren wasteland with very few enemies and no survivors. There are no quests to complete here,\n"
+              "however there may be hidden treasures to discover.")
     elif first_location_choice.lower() == "the dark forest":
-        print("\n\n")
+        print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
+              "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
     elif first_location_choice.lower() == "kyrlo castle":
-        print("\n\n")
+        print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
+              "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
 
     travel_or_back1 = prompt_choice(
         "\ntype [travel] to go to this location or type [back] to go back to the list of locations: ",
@@ -472,7 +475,8 @@ print(f"Traveling to {first_location_choice}...")
 time.sleep(1)
 
 #deciding whether to battle or flee from enemies in the new location
-print("\nwhen entering a new location you cannot do any other actions until you have slain the nearby enemies.")
+if first_location_choice != "the wastelands" and first_location_choice != "kyrlo castle":
+    print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
 
 while True:
     welcome_message = prompt_choice(
@@ -562,11 +566,25 @@ if player_next_action1 == "explore":
     else:
         print("Invalid choice. You leave the chest alone and continue exploring.")
 
+if player_next_action1 == "travel":
+    second_location_choice = prompt_choice(
+        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
+        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
+        ["same", "next"],
+        "Invalid choice. Please type [same] or [next]."
+    )
+if second_location_choice.lower() == "same":
+    print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
+    print(First_location)
+elif second_location_choice.lower() == "next":
+    print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
+    print(Second_location)
+
 if player_next_action1 == "talk":
-    print("\nYou talk to the villagers and they tell you about the recent attacks by the Zoli civilisation and their leader Yohl.")
-    print("They also mention that there are other survivors in the area who might be able to help you on your journey.")
+    print("\nYou talk to the villager, patrick. He tells you about the recent attacks by the Zoli civilisation and their leader Yohl.")
+    print("He also mentions that there are other survivors in the area who might be able to help you on your journey.")
     
-    character_accept1 = safe_input("\nwould you like to [recruit] a survivor or [leave] them alone?: ")
+    character_accept1 = safe_input("\nwould you like to [recruit] patrick or [leave] him alone?: ")
     if character_accept1.lower() == "recruit":
         knight.party_members += 1
         print("\nYou have recruited a survivor to join your party. They will help you in battles and provide support.")
@@ -578,3 +596,43 @@ choice2 = safe_input("\nwhat would you like to do next? Do you need a reminder o
 if choice2.lower() == "yes":
     player_next_action2 = safe_input("\nYou can [explore] the area, type [talk] to other characters and find out more about them and your enemies,\n"
                                      "type [travel] to another location, or type [status]to check your condition and use experience points: ").strip().lower()
+elif choice2.lower() == "no":
+    player_next_action2 = safe_input("\nOkay what would you like to do next?: ").strip().lower()
+else:
+    safe_input("\nInvalid choice. Please type [yes] or [no]: ")
+
+if player_next_action2 == "status":
+    show_player_stats(knight)
+elif player_next_action2 == "explore":
+    explore_outcomes2 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
+    result = random.choice(explore_outcomes2)
+    print(result)
+    open2 = prompt_choice(
+        "\nType [open] to open the chest or [leave] to leave it alone: ",
+        ["open", "leave"],
+        "Invalid choice. Please type [open] or [leave]."
+    )
+    if open2.lower() == "open":
+        chest_outcomes2 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
+        result = random.choice(chest_outcomes2)
+        print(result)
+        knight.experience += 5
+        print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
+        stats2 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
+        if stats2.lower() == "yes":
+            show_player_stats(knight)
+        else:
+            print("You chose not to view your stats.")
+    elif open2.lower() == "leave":
+        print("You leave the chest alone and continue exploring.")
+elif player_next_action2 == "talk":
+    repair_or_not1 = safe_input("\nYou talk to the blacksmith, John. He tells you about how he can improve one your weapons damage stat if you give him 5 gold coins. Would you like to pay him? type [yes] or [no]: ")
+    if repair_or_not1.lower() == "yes":
+        if knight.gold >= 5:
+            knight.gold -= 5
+            knight.weapon_damage += 2
+            print(f"\nYou paid John 5 gold coins and improved your weapon's damage! New damage: {knight.weapon_damage}")
+        else:
+            print("You don't have enough gold coins.")
+    elif repair_or_not1.lower() == "no":
+        print("You decide not to pay the blacksmith and continue your journey.")
