@@ -155,7 +155,7 @@ class_details = {
     ),
     "archer": (
         "2",
-        "The archer attacks from distance, close combat and has high mobility, but cannot parry like the warrior or paladin.",
+        "The archer attacks from distance, close and has high mobility, using a dagger and bow. But cannot parry like the warrior or paladin due to its lack of a shield.",
     ),
     "paladin": (
         "3",
@@ -240,6 +240,7 @@ class Player(Character):
         self.class_name = class_name
         self.lives = 1
         self.experience = 0
+        self.gold = 0
         self.party_members = 0
         self.agility = 5
         self.inventory = {}
@@ -538,9 +539,6 @@ player_next_action1 = safe_input("\nYou have a few options of what you can do fr
                                  " to other characters and find out more about them and your enemies, type [travel] to another location, or type [status]\n"
                                  " to check your condition and use experience points: ").strip().lower()
 
-if player_next_action1 == "status":
-    show_player_stats(knight)
-
 if player_next_action1 == "explore":
     explore_outcomes1 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
     result = random.choice(explore_outcomes1)
@@ -554,6 +552,9 @@ if player_next_action1 == "explore":
         chest_outcomes1 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
         result = random.choice(chest_outcomes1)
         print(result)
+        if "5 gold coins" in result.lower():
+            knight.gold += 5
+            print(f"You gained 5 gold coins. Total gold: {knight.gold}")
         knight.experience += 5
         print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
         stats1 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
@@ -565,20 +566,6 @@ if player_next_action1 == "explore":
         print("You leave the chest alone and continue exploring.")
     else:
         print("Invalid choice. You leave the chest alone and continue exploring.")
-
-if player_next_action1 == "travel":
-    second_location_choice = prompt_choice(
-        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
-        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
-        ["same", "next"],
-        "Invalid choice. Please type [same] or [next]."
-    )
-if second_location_choice.lower() == "same":
-    print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-    print(First_location)
-elif second_location_choice.lower() == "next":
-    print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-    print(Second_location)
 
 if player_next_action1 == "talk":
     print("\nYou talk to the villager, patrick. He tells you about the recent attacks by the Zoli civilisation and their leader Yohl.")
@@ -592,6 +579,25 @@ if player_next_action1 == "talk":
         print(f"Your party now has {knight.party_members} member(s).")
     elif character_accept1.lower() == "leave":
         print("\nYou decide not to recruit the survivor and continue on your journey.")
+
+if player_next_action1 == "travel":
+    second_location_choice = prompt_choice(
+        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
+        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
+        ["same", "next"],
+        "Invalid choice. Please type [same] or [next]."
+    )
+
+    if second_location_choice.lower() == "same":
+        print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
+        print(First_location)
+    elif second_location_choice.lower() == "next":
+        print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
+        print(Second_location)
+
+if player_next_action1 == "status":
+    show_player_stats(knight)
+
 choice2 = safe_input("\nwhat would you like to do next? Do you need a reminder of your options? type [yes] or [no]: ")
 if choice2.lower() == "yes":
     player_next_action2 = safe_input("\nYou can [explore] the area, type [talk] to other characters and find out more about them and your enemies,\n"
@@ -601,9 +607,8 @@ elif choice2.lower() == "no":
 else:
     safe_input("\nInvalid choice. Please type [yes] or [no]: ")
 
-if player_next_action2 == "status":
-    show_player_stats(knight)
-elif player_next_action2 == "explore":
+
+if player_next_action2 == "explore":
     explore_outcomes2 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
     result = random.choice(explore_outcomes2)
     print(result)
@@ -616,6 +621,9 @@ elif player_next_action2 == "explore":
         chest_outcomes2 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
         result = random.choice(chest_outcomes2)
         print(result)
+        if "5 gold coins" in result.lower():
+            knight.gold += 5
+            print(f"You gained 5 gold coins. Total gold: {knight.gold}")
         knight.experience += 5
         print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
         stats2 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
@@ -625,14 +633,39 @@ elif player_next_action2 == "explore":
             print("You chose not to view your stats.")
     elif open2.lower() == "leave":
         print("You leave the chest alone and continue exploring.")
-elif player_next_action2 == "talk":
+
+if player_next_action2 == "talk":
     repair_or_not1 = safe_input("\nYou talk to the blacksmith, John. He tells you about how he can improve one your weapons damage stat if you give him 5 gold coins. Would you like to pay him? type [yes] or [no]: ")
     if repair_or_not1.lower() == "yes":
         if knight.gold >= 5:
             knight.gold -= 5
-            knight.weapon_damage += 2
-            print(f"\nYou paid John 5 gold coins and improved your weapon's damage! New damage: {knight.weapon_damage}")
+            if knight.class_name.lower() == "archer":
+                knight.attack_power += 4
+                print(f"\nYou paid John 5 gold coins and improved your dagger and bow damage! New attack power: {knight.attack_power}")
+            else:
+                knight.attack_power += 2
+                print(f"\nYou paid John 5 gold coins and improved your weapon's damage! New attack power: {knight.attack_power}")
         else:
             print("You don't have enough gold coins.")
     elif repair_or_not1.lower() == "no":
         print("You decide not to pay the blacksmith and continue your journey.")
+
+third_location_choice = prompt_choice(
+        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
+        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
+        ["same", "next"],
+        "Invalid choice. Please type [same] or [next]."
+    )
+
+if player_next_action2 == "travel":
+    safe_input(third_location_choice)
+
+elif third_location_choice.lower() == "same":
+    print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
+    print(First_location)
+elif third_location_choice.lower() == "next":
+    print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
+    print(Third_location)
+
+if player_next_action2 == "status":
+    show_player_stats(knight)
