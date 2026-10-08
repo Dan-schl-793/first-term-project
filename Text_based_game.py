@@ -77,20 +77,14 @@ enter = prompt_choice(
 if enter.lower() == "s":
     print("\nplease ensure to have your terminal window enlarged for the best playing experience.")
     time.sleep(3)
-# opening message
-    print(
-        " \nHello player. In this game you will be playing a royal knight of the"
-        " kingdom Krylo, the kingdom has been overrun with\nevil ancient beasts"
-        " cast upon it by the rival civilisation The Zoli led by their leader Yohl."
-        " \nIt is your job to extinguish the land of these monsters and re-gain control of the casle"
-        " All your fellow knights fell in battle\ntrying to keep the"
-        " enemy out of the town walls so it is up to you and you alone to"
-        " regain control of the kingdom. You may find other survivors"
-        " along\nthe way and you must decide whether what they bring to the"
-        " party outweighs what they cost you. Be careful, there's a reason all"
-        " that came before you\nfell to these beasts. They are not to be"
-        " trifled with."
-    )
+
+    # opening message
+    with open("opening_paragraph.txt", "r") as file:
+        opening_paragraph = file.read()
+
+    print()
+    print(opening_paragraph)
+
 elif enter.lower() == "e":
     print("You chose to exit.")
     sys.exit(0)
