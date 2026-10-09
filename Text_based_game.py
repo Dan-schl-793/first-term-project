@@ -413,16 +413,41 @@ def battle_loop(player: Player, enemy: Enemy):
 print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
 #location selection mechanic explanation
-print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle.\n"
-" Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
-" and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
-" to go back to a previous tier once you have moved on.")
+print("\nYou will go through 5 different location tiers in this game. There are locations in tiers 1 through 4, and then a final battle at the fallen throne.\n"
+" Each location tier has 4 locations to choose from, and you will need to pick one to travel to. You will be able to travel back and forth between locations in\n"
+" the same tier, but you will not be able to go back to a previous tier once you have moved on.")
+
+location_descriptions = {
+    "the lowlands": "The lowlands are a broad area of open grassland with many weak enemies and a few scattered survivors.",
+    "ronderdale": "Ronderdale is a market town on the edge of the kingdom. It is safer than the wild frontier and offers healing, upgrades, and easier quests.",
+    "the dark forest": "The dark forest is a dense woodland packed with beasts and ambushes. It rewards brave adventurers with stronger experience gains.",
+    "the wastelands": "The wastelands are a ruined battlefield of broken stone and ash. Few enemies remain, but hidden treasure may still be found here.",
+    "the midlands": "The midlands are rolling hills crossed by patrol routes and ruined roads, filled with raiders and scouts.",
+    "clonsel": "Clonsel is a fortified trade city known for its stone walls and well-trained guards. It is a steady place to gather information and rest.",
+    "hebra village": "Hebra village sits near a river and is populated by survivors who need help defending their homes from roaming attackers.",
+    "the ruined bridge": "The ruined bridge stretches over a deep ravine and is haunted by ambushers who use the broken stones as cover.",
+    "the highlands": "The highlands rise into harsh cliffs and narrow mountain paths. The land is cold, steep, and full of dangerous patrols.",
+    "the cursed swamp": "The cursed swamp is a soggy nightmare of mud, fog, and monstrous creatures. It is a risky but rewarding route through the kingdom.",
+    "the dragon's lair": "The dragon's lair is a volcanic cavern where ancient winged beasts guard their nests and treasure hoards.",
+    "the obsidian gate": "The obsidian gate is a giant black fortress entrance covered in ash and old sigils, protected by elite guards.",
+    "the frosty peaks": "The frosty peaks are icy ridges where the cold is brutal and the enemy patrols are relentless.",
+    "volcano pass": "Volcano pass is a narrow path cut through a steaming mountain range, filled with fire-wreathed monsters.",
+    "the glass caverns": "The glass caverns are crystal-lined tunnels that reflect light unnaturally and hide deadly ambushes.",
+    "the moonlit ruins": "The moonlit ruins are a silent, ancient fortress where old magic still flickers beneath the stone.",
+    "krylo castle": "The fallen throne is the final battlefield of the war, where the last resistance will stand against the enemy's dark ruler."
+}
+
+first_location = ["the lowlands", "ronderdale", "the dark forest", "krylo castle"]
+second_location = ["the midlands", "clonsel", "hebra village", "krylo castle"]
+third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "krylo castle"]
+fourth_location = ["the frosty peaks", "volcano pass", "krylo castle"]
+final_battle = ["krylo castle"]
 
 #first location selection
 print("\nyou will first need to decide the first location you will travel to.")
-print(("\nthese are your options for the first location:"))
+print("\nthese are your options for the first location:")
 print(first_location)
-valid_locations = [location.lower() for location in first_location] + ["the wastelands"]
+valid_locations = [location.lower() for location in first_location]
 
 while True:
     first_location_choice = prompt_choice(
@@ -431,21 +456,7 @@ while True:
         "Invalid location. Please choose one from the list."
     )
 
-    if first_location_choice.lower() == "the lowlands":
-        print("\n\nThe lowlands are a large area of flat land with many low level enemies. The area is home to many survivors and there are many quests to complete here.\n")
-    elif first_location_choice.lower() == "ronderdale":
-        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\n"
-        " The people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\n"
-        " Going to Ronderdale will give you the opportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
-    elif first_location_choice.lower() == "the wastelands":
-        print("\n\nThe wastelands were the first area to be attacked by the Zoli civilisation. The area is now a barren wasteland with very few enemies and no survivors. There are no quests to complete here,\n"
-              "however there may be hidden treasures to discover.")
-    elif first_location_choice.lower() == "the dark forest":
-        print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
-              "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
-    elif first_location_choice.lower() == "kyrlo castle":
-        print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
-              "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
+    print(f"\n{location_descriptions[first_location_choice.lower()]}")
 
     travel_or_back1 = prompt_choice(
         "\ntype [travel] to go to this location or type [back] to go back to the list of locations: ",
@@ -470,7 +481,7 @@ print(f"Traveling to {first_location_choice}...")
 time.sleep(1)
 
 #deciding whether to battle or flee from enemies in the new location
-if first_location_choice != "the wastelands" and first_location_choice != "kyrlo castle":
+if first_location_choice != "the wastelands":
     print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
 
 while True:
