@@ -413,41 +413,16 @@ def battle_loop(player: Player, enemy: Enemy):
 print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
 #location selection mechanic explanation
-print("\nYou will go through 5 different location tiers in this game. There are locations in tiers 1 through 4, and then a final battle at the fallen throne.\n"
-" Each location tier has 4 locations to choose from, and you will need to pick one to travel to. You will be able to travel back and forth between locations in\n"
-" the same tier, but you will not be able to go back to a previous tier once you have moved on.")
-
-location_descriptions = {
-    "the lowlands": "The lowlands are a broad area of open grassland with many weak enemies and a few scattered survivors.",
-    "ronderdale": "Ronderdale is a market town on the edge of the kingdom. It is safer than the wild frontier and offers healing, upgrades, and easier quests.",
-    "the dark forest": "The dark forest is a dense woodland packed with beasts and ambushes. It rewards brave adventurers with stronger experience gains.",
-    "the wastelands": "The wastelands are a ruined battlefield of broken stone and ash. Few enemies remain, but hidden treasure may still be found here.",
-    "the midlands": "The midlands are rolling hills crossed by patrol routes and ruined roads, filled with raiders and scouts.",
-    "clonsel": "Clonsel is a fortified trade city known for its stone walls and well-trained guards. It is a steady place to gather information and rest.",
-    "hebra village": "Hebra village sits near a river and is populated by survivors who need help defending their homes from roaming attackers.",
-    "the ruined bridge": "The ruined bridge stretches over a deep ravine and is haunted by ambushers who use the broken stones as cover.",
-    "the highlands": "The highlands rise into harsh cliffs and narrow mountain paths. The land is cold, steep, and full of dangerous patrols.",
-    "the cursed swamp": "The cursed swamp is a soggy nightmare of mud, fog, and monstrous creatures. It is a risky but rewarding route through the kingdom.",
-    "the dragon's lair": "The dragon's lair is a volcanic cavern where ancient winged beasts guard their nests and treasure hoards.",
-    "the obsidian gate": "The obsidian gate is a giant black fortress entrance covered in ash and old sigils, protected by elite guards.",
-    "the frosty peaks": "The frosty peaks are icy ridges where the cold is brutal and the enemy patrols are relentless.",
-    "volcano pass": "Volcano pass is a narrow path cut through a steaming mountain range, filled with fire-wreathed monsters.",
-    "the glass caverns": "The glass caverns are crystal-lined tunnels that reflect light unnaturally and hide deadly ambushes.",
-    "the moonlit ruins": "The moonlit ruins are a silent, ancient fortress where old magic still flickers beneath the stone.",
-    "krylo castle": "The fallen throne is the final battlefield of the war, where the last resistance will stand against the enemy's dark ruler."
-}
-
-first_location = ["the lowlands", "ronderdale", "the dark forest", "krylo castle"]
-second_location = ["the midlands", "clonsel", "hebra village", "krylo castle"]
-third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "krylo castle"]
-fourth_location = ["the frosty peaks", "volcano pass", "krylo castle"]
-final_battle = ["krylo castle"]
+print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle.\n"
+" Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
+" and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
+" to go back to a previous tier once you have moved on.")
 
 #first location selection
 print("\nyou will first need to decide the first location you will travel to.")
-print("\nthese are your options for the first location:")
+print(("\nthese are your options for the first location:"))
 print(first_location)
-valid_locations = [location.lower() for location in first_location]
+valid_locations = [location.lower() for location in first_location] + ["the wastelands"]
 
 while True:
     first_location_choice = prompt_choice(
@@ -456,7 +431,21 @@ while True:
         "Invalid location. Please choose one from the list."
     )
 
-    print(f"\n{location_descriptions[first_location_choice.lower()]}")
+    if first_location_choice.lower() == "the lowlands":
+        print("\n\nThe lowlands are a large area of flat land with many low level enemies. The area is home to many survivors and there are many quests to complete here.\n")
+    elif first_location_choice.lower() == "ronderdale":
+        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\n"
+        " The people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\n"
+        " Going to Ronderdale will give you the opportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
+    elif first_location_choice.lower() == "the wastelands":
+        print("\n\nThe wastelands were the first area to be attacked by the Zoli civilisation. The area is now a barren wasteland with very few enemies and no survivors. There are no quests to complete here,\n"
+              "however there may be hidden treasures to discover.")
+    elif first_location_choice.lower() == "the dark forest":
+        print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
+              "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
+    elif first_location_choice.lower() == "kyrlo castle":
+        print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
+              "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
 
     travel_or_back1 = prompt_choice(
         "\ntype [travel] to go to this location or type [back] to go back to the list of locations: ",
@@ -481,7 +470,7 @@ print(f"Traveling to {first_location_choice}...")
 time.sleep(1)
 
 #deciding whether to battle or flee from enemies in the new location
-if first_location_choice != "the wastelands":
+if first_location_choice != "the wastelands" and first_location_choice != "kyrlo castle":
     print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
 
 while True:
@@ -540,142 +529,138 @@ else:
     print(f"{knight.name}, you have lost a life and returned to full health.")
     print("\nYou can try again from the start of this encounter.")
 
-player_next_action1 = safe_input("\nYou have a few options of what you can do from here.\nYou can [explore] the area, type [talk]"
-                                 " to other characters and find out more about them and your enemies, type [travel] to another location, or type [status]\n"
-                                 " to check your condition and use experience points: ").strip().lower()
 
-if player_next_action1 == "explore":
-    explore_outcomes1 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
-    result = random.choice(explore_outcomes1)
+#turn system
+
+def explore_action(player, state):
+    """Explore the area, and maybe find a chest."""
+    explore_outcomes = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
+    result = random.choice(explore_outcomes)
     print(result)
-    open1 = prompt_choice(
+
+    if "chest" not in result:
+        return
+
+    open_or_leave = prompt_choice(
         "\nType [open] to open the chest or [leave] to leave it alone: ",
         ["open", "leave"],
         "Invalid choice. Please type [open] or [leave]."
     )
-    if open1.lower() == "open":
-        chest_outcomes1 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
-        result = random.choice(chest_outcomes1)
+    if open_or_leave.lower() == "open":
+        chest_outcomes = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
+        result = random.choice(chest_outcomes)
         print(result)
         if "5 gold coins" in result.lower():
-            knight.gold += 5
-            print(f"You gained 5 gold coins. Total gold: {knight.gold}")
-        knight.experience += 5
-        print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
-        stats1 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
-        if stats1.lower() == "yes":
-            show_player_stats(knight)
+            player.gold += 5
+            print(f"You gained 5 gold coins. Total gold: {player.gold}")
+        player.experience += 5
+        print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {player.experience}")
+        see_stats = prompt_choice(
+            "\nwould you like to see your updated stats? type [yes] or [no]: ",
+            ["yes", "no"],
+            "Invalid choice. Please type [yes] or [no]."
+        )
+        if see_stats.lower() == "yes":
+            show_player_stats(player)
         else:
             print("You chose not to view your stats.")
-    elif open1.lower() == "leave":
-        print("You leave the chest alone and continue exploring.")
     else:
-        print("Invalid choice. You leave the chest alone and continue exploring.")
+        print("You leave the chest alone and continue exploring.")
 
-if player_next_action1 == "talk":
+
+def talk_to_patrick(player, state):
     print("\nYou talk to the villager, patrick. He tells you about the recent attacks by the Zoli civilisation and their leader Yohl.")
     print("He also mentions that there are other survivors in the area who might be able to help you on your journey.")
-    
-    character_accept1 = safe_input("\nwould you like to [recruit] patrick or [leave] him alone?: ")
-    if character_accept1.lower() == "recruit":
-        knight.party_members += 1
+
+    if state["patrick_recruited"]:
+        print("\nPatrick is already travelling with you.")
+        return
+
+    character_accept = prompt_choice(
+        "\nwould you like to [recruit] patrick or [leave] him alone?: ",
+        ["recruit", "leave"],
+        "Invalid choice. Please type [recruit] or [leave]."
+    )
+    if character_accept.lower() == "recruit":
+        state["patrick_recruited"] = True
+        player.party_members += 1
         print("\nYou have recruited a survivor to join your party. They will help you in battles and provide support.")
-        knight.add_item("Survivor Ally", 1)
-        print(f"Your party now has {knight.party_members} member(s).")
-    elif character_accept1.lower() == "leave":
+        player.add_item("Survivor Ally", 1)
+        print(f"Your party now has {player.party_members} member(s).")
+    else:
         print("\nYou decide not to recruit the survivor and continue on your journey.")
 
-if player_next_action1 == "travel":
-    second_location_choice = prompt_choice(
-        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
-        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
-        ["same", "next"],
-        "Invalid choice. Please type [same] or [next]."
+
+def talk_to_john(player, state):
+    repair_or_not = prompt_choice(
+        "\nYou talk to the blacksmith, John. He tells you about how he can improve one your weapons damage stat if you give him 5 gold coins. Would you like to pay him? type [yes] or [no]: ",
+        ["yes", "no"],
+        "Invalid choice. Please type [yes] or [no]."
     )
-
-    if second_location_choice.lower() == "same":
-        print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-        print(second_location)
-    elif second_location_choice.lower() == "next":
-        print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-        print(second_location)
-
-if player_next_action1 == "status":
-    show_player_stats(knight)
-
-choice2 = safe_input("\nwhat would you like to do next? Do you need a reminder of your options? type [yes] or [no]: ")
-if choice2.lower() == "yes":
-    player_next_action2 = safe_input("\nYou can [explore] the area, type [talk] to other characters and find out more about them and your enemies,\n"
-                                     "type [travel] to another location, or type [status]to check your condition and use experience points: ").strip().lower()
-elif choice2.lower() == "no":
-    player_next_action2 = safe_input("\nOkay what would you like to do next?: ").strip().lower()
-else:
-    safe_input("\nInvalid choice. Please type [yes] or [no]: ")
-
-
-if player_next_action2 == "explore":
-    explore_outcomes2 = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
-    result = random.choice(explore_outcomes2)
-    print(result)
-    open2 = prompt_choice(
-        "\nType [open] to open the chest or [leave] to leave it alone: ",
-        ["open", "leave"],
-        "Invalid choice. Please type [open] or [leave]."
-    )
-    if open2.lower() == "open":
-        chest_outcomes2 = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
-        result = random.choice(chest_outcomes2)
-        print(result)
-        if "5 gold coins" in result.lower():
-            knight.gold += 5
-            print(f"You gained 5 gold coins. Total gold: {knight.gold}")
-        knight.experience += 5
-        print(f"\nYou also earned 5 experience points for opening the chest! Total XP: {knight.experience}")
-        stats2 = safe_input("\nwould you like to see your updated stats? type [yes] or [no]: ")
-        if stats2.lower() == "yes":
-            show_player_stats(knight)
-        else:
-            print("You chose not to view your stats.")
-    elif open2.lower() == "leave":
-        print("You leave the chest alone and continue exploring.")
-
-if player_next_action2 == "talk":
-    repair_or_not1 = safe_input("\nYou talk to the blacksmith, John. He tells you about how he can improve one your weapons damage stat if you give him 5 gold coins. Would you like to pay him? type [yes] or [no]: ")
-    if repair_or_not1.lower() == "yes":
-        if knight.gold >= 5:
-            knight.gold -= 5
-            if knight.class_name.lower() == "archer":
-                knight.attack_power += 4
-                print(f"\nYou paid John 5 gold coins and improved your dagger and bow damage! New attack power: {knight.attack_power}")
+    if repair_or_not.lower() == "yes":
+        if player.gold >= 5:
+            player.gold -= 5
+            if player.class_name.lower() == "archer":
+                player.attack_power += 4
+                print(f"\nYou paid John 5 gold coins and improved your dagger and bow damage! New attack power: {player.attack_power}")
             else:
-                knight.attack_power += 2
-                print(f"\nYou paid John 5 gold coins and improved your weapon's damage! New attack power: {knight.attack_power}")
+                player.attack_power += 2
+                print(f"\nYou paid John 5 gold coins and improved your weapon's damage! New attack power: {player.attack_power}")
         else:
             print("You don't have enough gold coins.")
-    elif repair_or_not1.lower() == "no":
+    else:
         print("You decide not to pay the blacksmith and continue your journey.")
 
-third_location_choice = prompt_choice(
+
+def talk_action(player, state):
+    """Who you can talk to depends on which tier you are in."""
+    if state["tier"] == 1:
+        talk_to_patrick(player, state)
+    else:
+        talk_to_john(player, state)
+
+
+def travel_action(player, state):
+    """Choose to stay in the same tier or move on to the next one."""
+    tiers = [first_location, second_location, third_location, fourth_location]
+
+    travel_choice = prompt_choice(
         "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
         "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
         ["same", "next"],
         "Invalid choice. Please type [same] or [next]."
     )
 
-if player_next_action1 == "travel":
-    third_location_choice = prompt_choice(
-        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
-        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
-        ["same", "next"],
-        "Invalid choice. Please type [same] or [next]."
-    )
-
-    if third_location_choice.lower() == "same":
+    if travel_choice.lower() == "same":
         print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-        print(third_location)
-    elif third_location_choice.lower() == "next":
+    elif travel_choice.lower() == "next":
+        if state["tier"] < len(tiers):
+            state["tier"] += 1
         print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-        print(third_location)
+    print(tiers[state["tier"] - 1])
 
-if player_next_action2 == "status":
-    show_player_stats(knight)
+
+def status_action(player, state):
+    show_player_stats(player)
+
+
+# the game loop: the player picks what to do each turn until the game ends
+game_state = {"tier": 1, "patrick_recruited": False}
+
+actions = {
+    "explore": explore_action,
+    "talk": talk_action,
+    "travel": travel_action,
+    "status": status_action,
+}
+
+while True:
+    player_next_action = prompt_choice(
+        "\nYou have a few options of what you can do from here.\nYou can [explore] the area, type [talk]"
+        " to other characters and find out more about them and your enemies, type [travel] to another location, or type [status]\n"
+        " to check your condition and use experience points: ",
+        actions,
+        "Invalid choice. Please type explore, talk, travel or status."
+    ).lower()
+
+    actions[player_next_action](knight, game_state)
