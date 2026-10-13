@@ -184,9 +184,9 @@ while True:
 
 #location lists
 first_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
-second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
-third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
-fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
+# second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
+# third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
+# fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
 final_battle = ["krylo castle"]
 
 #checking if the player or enemy is still alive based on their health points
@@ -413,10 +413,14 @@ def battle_loop(player: Player, enemy: Enemy):
 print(f"\nNow that you have your character, it's time to begin your journey. Good luck, {character_name}!")
 
 #location selection mechanic explanation
-print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle.\n"
-" Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
-" and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
-" to go back to a previous tier once you have moved on.")
+# print("\nYou will go through 5 different location tiers in this game. Theres locations that are tier 1 through 4 and then the final location, Krylo Castle.\n"
+# " Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
+# " and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
+# " to go back to a previous tier once you have moved on.")
+print("\nYou will go through 4 different locations on this journey. The final location, Kyrlo Castle, is where the leader of the Zoli civilisation,\n"
+      "Yohl, is located. You will have to defeat him to win the game. Your job is to work your way through each location growing more powerful to reach and defeatthe final boss.\n"
+      "Please note that you are able to travel to krylo castle at any time but it is highly advised that you travel to other locations first to level up and gain experience before\n"
+      "facing the final boss.")
 
 #first location selection
 print("\nyou will first need to decide the first location you will travel to.")
@@ -469,31 +473,6 @@ time.sleep(1)
 print(f"Traveling to {first_location_choice}...")
 time.sleep(1)
 
-#deciding whether to battle or flee from enemies in the new location
-if first_location_choice != "the wastelands" and first_location_choice != "kyrlo castle":
-    print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
-
-while True:
-    welcome_message = prompt_choice(
-        f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] nearby enemies?: ",
-        ["flee", "battle"],
-        "Invalid choice. Please type [flee] or [battle]."
-    )
-    battle_message1 = ("your first battle is with a chulu, a chimp looking creature with medium health but low damage output")
-
-    if welcome_message.lower() == "flee":
-        print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
-        print(first_location)
-        continue
-
-    if welcome_message.lower() == "battle":
-        with open("chulu.txt", "r") as file:
-            content = file.read().splitlines()
-            for line in content:
-                print(line)
-        print(f"\n\n{battle_message1}")
-        break
-
 #defining player stats based on character creation choices
 knight = Player(
     name=character_name,
@@ -516,25 +495,72 @@ elif weapon_set == "3":
     knight.attack_power += 5
     knight.defense -= 1
     knight.agility += 1
-#defining enemy stats and starting the battle loop
-villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
-battle_result = battle_loop(knight, villain)
+#deciding whether to battle or flee from enemies in the new location
+if first_location_choice.lower() not in ("the wastelands", "kyrlo castle"):
+    print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
+elif first_location_choice.lower() == "the wastelands":
+    print("\nThe wastelands is sparse for enemies. look for survivors and tressure or proceed to the next area.")
+elif first_location_choice.lower() == "kyrlo castle":
+    print("\nKyrlo castle is the final location and the most difficult to reach. You will have to defeat Yohl to win the game.")
+    yohl_choice = prompt_choice(
+        f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] the mighty Yohl?: ",
+        ["flee", "battle"],
+        "Invalid choice. Please type [flee] or [battle]."
+    )
 
-if battle_result == "win":
-    print("\nThe Chulu has been defeated. The close area is now safe.")
-    print(f"\nYou earned 10 experience points for defeating the Chulu! Total XP: {knight.experience}")
-    print("\nNow that you have defeated the Chulu, you can continue your journey.")
-else:
-    print("\nThe Chulu defeats you and the battle ends.")
-    print(f"{knight.name}, you have lost a life and returned to full health.")
-    print("\nYou can try again from the start of this encounter.")
+    if yohl_choice.lower() == "battle":
+        # Add the Yohl ASCII-art text-file loading code here.
 
+        yohl = Enemy(name="Yohl", max_hp=100, attack_power=random.randint(10, 14), defense=3)
+        yohl_battle_result = battle_loop(knight, yohl)
+
+        if yohl_battle_result == "win":
+            print("\nYohl has been defeated! You have won the game.")
+        else:
+            print("\nYohl defeats you. Your journey ends here.")
+        sys.exit(0)
+
+    print("\nYou flee from Kyrlo Castle. You can return when you are ready to face Yohl.")
+    sys.exit(0)
+
+while True:
+    welcome_message2 = prompt_choice(
+        f"\nYou have arrived at {first_location_choice}, would you like to either [flee] or [battle] nearby enemies?: ",
+        ["flee", "battle"],
+        "Invalid choice. Please type [flee] or [battle]."
+    )
+    battle_message1 = ("your first battle is with a chulu, a chimp looking creature with medium health but low damage output")
+
+    if welcome_message2.lower() == "flee":
+        print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
+        print(first_location)
+        break
+
+    if welcome_message2.lower() == "battle":
+        with open("chulu.txt", "r") as file:
+            content = file.read().splitlines()
+            for line in content:
+                print(line)
+        print(f"\n\n{battle_message1}")
+
+        villain = Enemy(name="Chulu", max_hp=30, attack_power=random.randint(5, 9), defense=1)
+        battle_result = battle_loop(knight, villain)
+
+        if battle_result == "win":
+            print("\nThe Chulu has been defeated. The close area is now safe.")
+            print(f"\nYou earned 10 experience points for defeating the Chulu! Total XP: {knight.experience}")
+            print("\nNow that you have defeated the Chulu, you can continue your journey.")
+        else:
+            print("\nThe Chulu defeats you and the battle ends.")
+            print(f"{knight.name}, you have lost a life and returned to full health.")
+            print("\nYou can try again from the start of this encounter.")
+        break
 
 #turn system
 
 def explore_action(player, state):
     """Explore the area, and maybe find a chest."""
-    explore_outcomes = ["You explore the area and find nothing of interest.", "You explore the area and find a chest."]
+    explore_outcomes = ["\nYou explore the area and find nothing of interest.", "You explore the area and find a chest."]
     result = random.choice(explore_outcomes)
     print(result)
 
@@ -544,10 +570,10 @@ def explore_action(player, state):
     open_or_leave = prompt_choice(
         "\nType [open] to open the chest or [leave] to leave it alone: ",
         ["open", "leave"],
-        "Invalid choice. Please type [open] or [leave]."
+        "\nInvalid choice. Please type [open] or [leave]."
     )
     if open_or_leave.lower() == "open":
-        chest_outcomes = ["You found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
+        chest_outcomes = ["\nYou found a health potion!.", "You found a damage potion!.", "You found 5 gold coins!."]
         result = random.choice(chest_outcomes)
         print(result)
         if "5 gold coins" in result.lower():
@@ -558,14 +584,14 @@ def explore_action(player, state):
         see_stats = prompt_choice(
             "\nwould you like to see your updated stats? type [yes] or [no]: ",
             ["yes", "no"],
-            "Invalid choice. Please type [yes] or [no]."
+            "\nInvalid choice. Please type [yes] or [no]."
         )
         if see_stats.lower() == "yes":
             show_player_stats(player)
         else:
-            print("You chose not to view your stats.")
+            print("\nYou chose not to view your stats.")
     else:
-        print("You leave the chest alone and continue exploring.")
+        print("\nYou leave the chest alone and continue exploring.")
 
 
 def talk_to_patrick(player, state):
@@ -619,25 +645,57 @@ def talk_action(player, state):
     else:
         talk_to_john(player, state)
 
-
+second_location_choice = ("\nYou have chosen not to see the locations again, which one would you like to travel to? ")
 def travel_action(player, state):
     """Choose to stay in the same tier or move on to the next one."""
-    tiers = [first_location, second_location, third_location, fourth_location]
+    tiers = [first_location]#, second_location, third_location, fourth_location]
 
-    travel_choice = prompt_choice(
-        "\nYou can either travel to another location in the same tier or move on to the next tier of locations. You cannot go back to a previous tier once you have moved on so be careful to not move on too quickly.\n"
-        "Type [same] to travel to another location in the same tier or type [next] to move on to the next tier of locations: ",
-        ["same", "next"],
-        "Invalid choice. Please type [same] or [next]."
+    reminder_choice = safe_input("\nwould you like a reminder of the locations?: type [yes] or [no]: ").strip().lower()
+    if reminder_choice == "yes":
+        print("\nHere are the locations you can travel to:")
+        for tier in tiers:
+            print(tier)
+    elif reminder_choice == "no":
+        print()
+        second_location_choice = safe_input (second_location_choice).strip().lower()
+
+    if second_location_choice.lower() == "the lowlands":
+        print("\n\nThe lowlands are a large area of flat land with many low level enemies. The area is home to many survivors and there are many quests to complete here.\n")
+    elif second_location_choice.lower() == "ronderdale":
+        print("\n\nRonderdale is a small town on the west edge of the krylo kingdom. There are many low level enemies and easier quests to complete there.\n"
+        " The people of the town are really suffering from the attack and could use your help taking down some already wounded enemies and rebuilding their town.\n"
+        " Going to Ronderdale will give you the opportunity to upgrade your items, battle skills and stats without taking the risk of losing lives early on.")
+    elif second_location_choice.lower() == "the wastelands":
+        print("\n\nThe wastelands were the first area to be attacked by the Zoli civilisation. The area is now a barren wasteland with very few enemies and no survivors. There are no quests to complete here,\n"
+              "however there may be hidden treasures to discover.")
+    elif second_location_choice.lower() == "the dark forest":
+        print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
+              "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
+    elif second_location_choice.lower() == "kyrlo castle":
+        print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
+              "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
+
+    travel_or_back2 = prompt_choice(
+        "\ntype [travel] to go to this location or type [back] to go back to the list of locations: ",
+        ["travel", "back"],
+        "Invalid choice. Please type [travel] or [back]."
     )
 
-    if travel_choice.lower() == "same":
-        print("\nYou have chosen to travel to another location in the same tier. Here are your options:")
-    elif travel_choice.lower() == "next":
-        if state["tier"] < len(tiers):
-            state["tier"] += 1
-        print("\nYou have chosen to move on to the next tier of locations. Here are your options:")
-    print(tiers[state["tier"] - 1])
+    if travel_or_back2.lower() == "travel":
+        break
+
+    print()
+    print(second_location_choice)
+
+#traveling to the first location
+print(f"Traveling to {second_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {second_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {second_location_choice}...")
+time.sleep(1)
+print(f"Traveling to {second_location_choice}...")
+time.sleep(1)
 
 
 def status_action(player, state):
