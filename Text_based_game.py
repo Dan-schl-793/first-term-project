@@ -482,6 +482,7 @@ knight = Player(
     class_name=class_set,
 )
 knight.lives = character_lives
+
 #deciding player dmg and defence based on weapon set choice
 if weapon_set == "1":
     knight.attack_power += 4
@@ -495,8 +496,9 @@ elif weapon_set == "3":
     knight.attack_power += 5
     knight.defense -= 1
     knight.agility += 1
+
 #deciding whether to battle or flee from enemies in the new location
-if first_location_choice.lower() not in ("the wastelands", "kyrlo castle"):
+if first_location_choice.lower() != ("the wastelands", "kyrlo castle"):
     print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
 elif first_location_choice.lower() == "the wastelands":
     print("\nThe wastelands is sparse for enemies. look for survivors and tressure or proceed to the next area.")
@@ -511,7 +513,7 @@ elif first_location_choice.lower() == "kyrlo castle":
     if yohl_choice.lower() == "battle":
         # Add the Yohl ASCII-art text-file loading code here.
 
-        yohl = Enemy(name="Yohl", max_hp=100, attack_power=random.randint(10, 14), defense=3)
+        yohl = Enemy(name="Yohl", max_hp=200, attack_power=random.randint(15, 25), defense=10)
         yohl_battle_result = battle_loop(knight, yohl)
 
         if yohl_battle_result == "win":
@@ -532,7 +534,7 @@ while True:
     battle_message1 = ("your first battle is with a chulu, a chimp looking creature with medium health but low damage output")
 
     if welcome_message2.lower() == "flee":
-        print("\nyou have fled Ronderdale, you can now choose where you would like to go from here")
+        print(f"\nyou have fled {first_location_choice}, you can now choose where you would like to go from here")
         print(first_location)
         break
 
@@ -682,11 +684,7 @@ def travel_action(player, state):
     )
 
     if travel_or_back2.lower() == "travel":
-        break
-
-    print()
-    print(second_location_choice)
-
+        print()
 #traveling to the first location
 print(f"Traveling to {second_location_choice}...")
 time.sleep(1)
