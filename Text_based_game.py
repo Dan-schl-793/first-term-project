@@ -185,10 +185,10 @@ while True:
     break
 
 #location lists
-first_location = ["the lowlands", "the wastelands", "ronderdale", "the dark forest", "krylo castle"]
-# second_location = ["the midlands", "clonsel", "hebra village", "krylo castle"]
-# third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "krylo castle"]
-# fourth_location = ["the frosty peaks", "valcano pass", "krylo castle"]
+first_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
+# second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
+# third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
+# fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
 final_battle = ["krylo castle"]
 
 #checking if the player or enemy is still alive based on their health points
@@ -481,10 +481,14 @@ def yohl_encounter(player, location_name):
             return
 
         if yohl_choice.lower() == "battle":
-            with open("chulu.txt", "r") as file:
-                content = file.read().splitlines()
-                for line in content:
-                    print(line)
+            #yohl's art file, if it isn't found the fight just starts without art
+            try:
+                with open("yohl.txt", "r") as file:
+                    content = file.read().splitlines()
+                    for line in content:
+                        print(line)
+            except FileNotFoundError:
+                pass
             print(f"\n\n{battle_message1}")
 
             yohl = Enemy(name="Yohl", max_hp=200, attack_power=random.randint(15, 25), defense=10)
