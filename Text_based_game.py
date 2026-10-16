@@ -185,10 +185,10 @@ while True:
     break
 
 #location lists
-first_location = ["the lowlands", "ronderdale", "the dark forest", "kyrlo castle"]
-# second_location = ["the midlands", "clonsel", "hebra village", "kyrlo castle"]
-# third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "kyrlo castle"]
-# fourth_location = ["the frosty peaks", "valcano pass", "kyrlo castle"]
+first_location = ["the lowlands", "ronderdale", "the dark forest", "krylo castle"]
+# second_location = ["the midlands", "clonsel", "hebra village", "krylo castle"]
+# third_location = [ "the highlands", "the cursed swamp", "the dragon's lair", "krylo castle"]
+# fourth_location = ["the frosty peaks", "valcano pass", "krylo castle"]
 final_battle = ["krylo castle"]
 
 #checking if the player or enemy is still alive based on their health points
@@ -477,7 +477,7 @@ def yohl_encounter(player, location_name):
         )
 
         if yohl_choice.lower() == "flee":
-            print("\nYou flee from Kyrlo Castle. You can return when you are ready to face Yohl.")
+            print("\nYou flee from Krylo Castle. You can return when you are ready to face Yohl.")
             return
 
         if yohl_choice.lower() == "battle":
@@ -527,7 +527,7 @@ location_enemies = {
 }
 
 
-#the flee/battle choice for the enemies near a new location (the old chulu fight, now works for every location except kyrlo castle)
+#the flee/battle choice for the enemies near a new location (the old chulu fight, now works for every location except krylo castle)
 def arrival_encounter(player, location_name):
     """Returns True once the nearby enemies are beaten, False if the player flees."""
     foe = location_enemies[location_name.lower()]
@@ -577,7 +577,7 @@ print(f"\nNow that you have your character, it's time to begin your journey. Goo
 # " Where the leader of the zoli civilisation, Yohl, is located. You will have to defeat him to win the game. Each location tier has 4 locations to choose from\n"
 # " and you will have to choose one of them to travel to. You will be able to travel back and forth between locations in the same tier but you will not be able\n" 
 # " to go back to a previous tier once you have moved on.")
-print("\nYou will go through 4 different locations on this journey. The final location, Kyrlo Castle, is where the leader of the Zoli civilisation,\n"
+print("\nYou will go through 4 different locations on this journey. The final location, Krylo Castle, is where the leader of the Zoli civilisation,\n"
       "Yohl, is located. You will have to defeat him to win the game. Your job is to work your way through each location growing more powerful to reach and defeatthe final boss.\n"
       "Please note that you are able to travel to krylo castle at any time but it is highly advised that you travel to other locations first to level up and gain experience before\n"
       "facing the final boss.")
@@ -607,7 +607,7 @@ while True:
     elif first_location_choice.lower() == "the dark forest":
         print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
               "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
-    elif first_location_choice.lower() == "kyrlo castle":
+    elif first_location_choice.lower() == "krylo castle":
         print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
               "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
 
@@ -659,19 +659,19 @@ elif weapon_set == "3":
 
 #deciding whether to battle or flee from enemies in the new location
 #(was comparing a string to a tuple which is always True, so the other branches never ran)
-if first_location_choice.lower() not in ("the wastelands", "kyrlo castle"):
+if first_location_choice.lower() not in ("the wastelands", "krylo castle"):
     print("\nwhen entering certain new locations you cannot do any other actions until you have slain the nearby enemies.")
 elif first_location_choice.lower() == "the wastelands":
     print("\nThe wastelands is sparse for enemies. look for survivors and tressure or proceed to the next area.")
-elif first_location_choice.lower() == "kyrlo castle":
-    print("\nKyrlo castle is the final location and the most difficult to reach. You will have to defeat Yohl to win the game.")
+elif first_location_choice.lower() == "krylo castle":
+    print("\nKrylo castle is the final location and the most difficult to reach. You will have to defeat Yohl to win the game.")
     yohl_encounter(knight, first_location_choice)
 
-#the arrival fight is skipped if the player started at kyrlo castle as they already faced (or fled from) yohl
+#the arrival fight is skipped if the player started at krylo castle as they already faced (or fled from) yohl
 #the player is only "in" a location once its nearby enemies are beaten, that decides who they can talk to
 cleared_locations = set()
 current_location = None
-if first_location_choice.lower() != "kyrlo castle":
+if first_location_choice.lower() != "krylo castle":
     if arrival_encounter(knight, first_location_choice):
         current_location = first_location_choice.lower()
         cleared_locations.add(current_location)
@@ -875,7 +875,7 @@ def talk_to_vex(player, state):
         return False
 
 
-#two npcs per location, kyrlo castle has none as only yohl is there
+#two npcs per location, krylo castle has none as only yohl is there
 location_npcs = {
     "ronderdale": {"patrick": talk_to_patrick, "john": talk_to_john},
     "the lowlands": {"mara": talk_to_mara, "garrick": talk_to_garrick},
@@ -944,7 +944,7 @@ def travel_action(player, state):
         elif destination_choice == "the dark forest":
             print("\n\nThe dark forest is a dense and dangerous area filled with mid level enemies. The forest is home to many powerful beasts and the Zoli civilisation has set up strongholds here.\n"
                   "Due to this there aren't really any survivors in the area and the quests are more difficult than in Ronderdale. However, there is lots of experience to be gained from battling higher tier enemies.")
-        elif destination_choice == "kyrlo castle":
+        elif destination_choice == "krylo castle":
             print("\n\nThis is were the leader of the Zoli civilisation, Yohl, is located. This is the final location and the most difficult to reach. You will have to defeat Yohl to win the game."
                   "This location will be an option in every list but it is highly advised that you travel to others and get leveled up first.\n")
 
@@ -971,9 +971,9 @@ def travel_action(player, state):
     print(f"Traveling to {destination_choice}...")
     time.sleep(1)
 
-    #the player only counts as being in a location once its enemies are beaten (kyrlo castle is only the yohl fight)
+    #the player only counts as being in a location once its enemies are beaten (krylo castle is only the yohl fight)
     state["location"] = None
-    if destination_choice == "kyrlo castle":
+    if destination_choice == "krylo castle":
         yohl_encounter(player, destination_choice)
     elif destination_choice in state["cleared"]:
         state["location"] = destination_choice
