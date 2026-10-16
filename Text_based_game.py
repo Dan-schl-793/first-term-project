@@ -67,6 +67,7 @@ def show_player_stats(player):
     print(f"Lives remaining: {player.lives}")
     print(f"Experience: {player.experience}")
 
+print("In this game when inputing your options will be the words or letters in square brackets. if there is nothing in square brackets it is numbers")
 
 enter = prompt_choice(
     "press [S]tart. press [E]xit, you can also press [ESC] to exit the game at any time: ",
@@ -915,15 +916,10 @@ def travel_action(player, state):
     tiers = [first_location]#, second_location, third_location, fourth_location]
 
     while True:
-        reminder_choice = prompt_choice(
-            "\nwould you like a reminder of the locations?: type [yes] or [no]: ",
-            ["yes", "no"],
-            "Invalid choice. Please type [yes] or [no]."
-        ).lower()
-        if reminder_choice == "yes":
-            print("\nHere are the locations you can travel to:")
-            for tier in tiers:
-                print(tier)
+        #the locations are always shown, there is no option to skip the reminder
+        print("\nHere are the locations you can travel to:")
+        for tier in tiers:
+            print(tier)
         print()
         #the chosen location gets its own variable, the prompt text above can't be reused as it's assigned inside this function
         destination_choice = prompt_choice(
@@ -957,9 +953,6 @@ def travel_action(player, state):
         if travel_or_back2.lower() == "travel":
             print()
             break
-
-        print()
-        print(first_location)
 
 #traveling to the chosen location (this used to sit outside the function so it ran once at startup)
     print(f"Traveling to {destination_choice}...")
